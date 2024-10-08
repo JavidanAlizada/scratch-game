@@ -55,6 +55,10 @@ Bonus symbols affect the final reward if at least one winning combination matche
    ```
    mvn clean install
    ```
+4. Packages the compiled code into a JAR
+   ```
+   mvn clean package
+   ```
 
 ## Testing
 
