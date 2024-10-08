@@ -47,11 +47,11 @@ Bonus symbols affect the final reward if at least one winning combination matche
    ```
    git clone <repository-url>
    ```
-2.   Navigate to the project directory:
+2. Navigate to the project directory:
    ```
    cd <project-directory>
    ```
-3.   Build the project using Maven
+3. Build the project using Maven
    ```
    mvn clean install
    ```
