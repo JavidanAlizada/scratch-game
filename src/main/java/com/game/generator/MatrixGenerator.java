@@ -33,7 +33,9 @@ public final class MatrixGenerator {
         Map<String, Integer> symbolCounters = new HashMap<>();
         Map<String, Integer> bonusSymbolCounters = new HashMap<>();
 
-        fillMatrixWithSymbols(config, matrix, symbolCounters, bonusSymbolCounters);
+        boolean bonusSymbolAssigned = false;
+
+        fillMatrixWithSymbols(config, matrix, symbolCounters, bonusSymbolCounters, bonusSymbolAssigned);
 
         return matrix;
     }
@@ -69,17 +71,22 @@ public final class MatrixGenerator {
      * @param matrix              The matrix to be filled.
      * @param symbolCounters      A map to count occurrences of normal symbols.
      * @param bonusSymbolCounters A map to count occurrences of bonus symbols.
+     * @param bonusSymbolAssigned  Track if a bonus symbol has been assigned.
      */
     private static void fillMatrixWithSymbols(GameConfig config,
                                               String[][] matrix,
                                               Map<String, Integer> symbolCounters,
-                                              Map<String, Integer> bonusSymbolCounters) {
+                                              Map<String, Integer> bonusSymbolCounters,
+                                              boolean bonusSymbolAssigned) {
         Probability probabilities = config.getProbabilities();
         List<StandardSymbolProbability> standardSymbols = probabilities.getStandardSymbols();
 
         for (StandardSymbolProbability symbolProbability : standardSymbols) {
-            String symbol = assignSymbol(symbolProbability, probabilities.getBonusSymbols(), symbolCounters, bonusSymbolCounters);
+            String symbol = assignSymbol(symbolProbability, probabilities.getBonusSymbols(), symbolCounters, bonusSymbolCounters, bonusSymbolAssigned);
             matrix[symbolProbability.getRow()][symbolProbability.getColumn()] = symbol;
+            if (symbol.equals(bonusSymbolCounters.keySet().stream().findFirst().orElse(null))) {
+                bonusSymbolAssigned = true;
+            }
         }
     }
 
@@ -90,13 +97,15 @@ public final class MatrixGenerator {
      * @param bonusProbability    The bonus symbol probability.
      * @param symbolCounters      A map to count occurrences of normal symbols.
      * @param bonusSymbolCounters A map to count occurrences of bonus symbols.
+     * @param bonusSymbolAssigned  Track if a bonus symbol has been assigned.
      * @return The assigned symbol.
      */
     private static String assignSymbol(StandardSymbolProbability standardProbability,
                                        BonusSymbolProbability bonusProbability,
                                        Map<String, Integer> symbolCounters,
-                                       Map<String, Integer> bonusSymbolCounters) {
-        if (shouldAssignBonusSymbol()) {
+                                       Map<String, Integer> bonusSymbolCounters,
+                                       boolean bonusSymbolAssigned) {
+        if (!bonusSymbolAssigned && shouldAssignBonusSymbol()) {
             String bonusSymbol = generateBonusSymbol(bonusProbability);
             bonusSymbolCounters.merge(bonusSymbol, 1, Integer::sum);
             return bonusSymbol;

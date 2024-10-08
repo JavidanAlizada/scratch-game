@@ -45,12 +45,15 @@ public class WinningCombinationCalculator {
         Map<String, Double> linearSymbolScoreMap = calculateLinearSymbolScores(matrix, linearSymbolsWinMap, bonusSymbolCounters, appliedCombinations);
 
         // Calculate total score
-        totalReward = sameSymbolScoreMap.entrySet().stream()
-                .map(e -> e.getValue() * linearSymbolScoreMap.getOrDefault(e.getKey(), 1.0) * bettingAmount)
-                .mapToDouble(Double::doubleValue)
-                .sum();
+        boolean hasWinningCombinations = !sameSymbolScoreMap.isEmpty() || !linearSymbolScoreMap.isEmpty();
+        if (hasWinningCombinations) {
+            totalReward = sameSymbolScoreMap.entrySet().stream()
+                    .map(e -> e.getValue() * linearSymbolScoreMap.getOrDefault(e.getKey(), 1.0) * bettingAmount)
+                    .mapToDouble(Double::doubleValue)
+                    .sum();
 
-        totalReward = applyBonusesToScore(config.getSymbolMap(), bonusSymbolCounters, totalReward);
+            totalReward = applyBonusesToScore(config.getSymbolMap(), bonusSymbolCounters, totalReward);
+        }
 
         appliedBonusSymbol = findAppliedBonusSymbol(bonusSymbolCounters, config);
 

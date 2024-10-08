@@ -3,6 +3,7 @@ package com.game;
 import com.game.calculator.WinningCombinationCalculator;
 import com.game.config.ConfigLoader;
 import com.game.config.GameConfig;
+import com.game.generator.MatrixGenerator;
 import com.game.model.GameResult;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ public class ScratchGame {
         }
 
         for (String[] row : matrix) {
-            System.out.print("[");
+            System.out.print("\t\t[");
             for (int j = 0; j < row.length; j++) {
                 System.out.print(row[j]);
                 if (j < row.length - 1) {
@@ -37,12 +38,7 @@ public class ScratchGame {
         var configFilePath = argsMap.get(CONFIG);
 
         GameConfig gameConfig = ConfigLoader.loadConfig(configFilePath);
-//        String[][] matrix = MatrixGenerator.generate(gameConfig);
-        String[][] matrix = {
-                {"A", "B", "C"},
-                {"E", "B", "10x"},
-                {"F", "D", "B"}
-        };
+        String[][] matrix = MatrixGenerator.generate(gameConfig);
 
         WinningCombinationCalculator calculator = new WinningCombinationCalculator();
 
@@ -52,26 +48,10 @@ public class ScratchGame {
     }
 
     private static void print(GameResult gameResult) {
-        /**
-         * {
-         *     "matrix": [
-         *         ["A", "A", "B"],
-         *         ["A", "+1000", "B"],
-         *         ["A", "A", "B"]
-         *     ],
-         *     "reward": 6600,
-         *     "applied_winning_combinations": {
-         *         "A": ["same_symbol_5_times", "same_symbols_vertically"],
-         *         "B": ["same_symbol_3_times", "same_symbols_vertically"]
-         *     },
-         *     "applied_bonus_symbol": "+1000"
-         * }
-         */
-
         System.out.println("{");
         System.out.println("\t" + withinDoubleQuote("matrix") + "[");
         printMatrix(gameResult.getMatrix());
-        System.out.print("],");
+        System.out.print("\t],\n");
         System.out.println("\t" + withinDoubleQuote("reward") + BigDecimal.valueOf(gameResult.getTotalReward()).toPlainString() + ",");
         System.out.println("\t" + withinDoubleQuote("applied_winning_combinations") + gameResult.getAppliedCombinations() + ",");
         System.out.println("\t" + withinDoubleQuote("applied_bonus_symbol") + gameResult.getAppliedBonusSymbol());
