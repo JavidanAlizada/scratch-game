@@ -14,10 +14,10 @@ public enum BonusImpact {
 
     public static BonusImpact fromValue(String impact) {
         for (BonusImpact bonusImpact : BonusImpact.values()) {
-            if (impact.equalsIgnoreCase(bonusImpact.getImpact())) {
+            if (bonusImpact.getImpact().equalsIgnoreCase(impact)) {
                 return bonusImpact;
             }
         }
-        throw new IllegalArgumentException("Bonus impact value is not valid!");
+        return null;
     }
 }

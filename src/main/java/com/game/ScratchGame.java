@@ -7,6 +7,7 @@ import com.game.generator.MatrixGenerator;
 import com.game.model.GameResult;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 
 public class ScratchGame {
@@ -47,22 +48,22 @@ public class ScratchGame {
         print(gameResult);
     }
 
-    private static void print(GameResult gameResult) {
+    static void print(GameResult gameResult) {
         System.out.println("{");
         System.out.println("\t" + withinDoubleQuote("matrix") + "[");
         printMatrix(gameResult.getMatrix());
         System.out.print("\t],\n");
-        System.out.println("\t" + withinDoubleQuote("reward") + BigDecimal.valueOf(gameResult.getTotalReward()).toPlainString() + ",");
+        System.out.println("\t" + withinDoubleQuote("reward") + BigDecimal.valueOf(gameResult.getTotalReward()).setScale(2, RoundingMode.CEILING).toPlainString() + ",");
         System.out.println("\t" + withinDoubleQuote("applied_winning_combinations") + gameResult.getAppliedCombinations() + ",");
         System.out.println("\t" + withinDoubleQuote("applied_bonus_symbol") + gameResult.getAppliedBonusSymbol());
         System.out.println("}");
     }
 
-    private static String withinDoubleQuote(String value) {
+    static String withinDoubleQuote(String value) {
         return String.format("\"%s\":", value);
     }
 
-    private static Map<String, String> readArgs(String[] args) {
+    static Map<String, String> readArgs(String[] args) {
         String configFilePath = null;
         int bettingAmount = 0;
 
