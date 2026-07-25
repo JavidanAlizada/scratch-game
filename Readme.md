@@ -1,4 +1,4 @@
-# Scratch Game
+# Matrix Betting iGaming
 
 ## Overview
 
